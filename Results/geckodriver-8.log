@@ -1,0 +1,27 @@
+1737310767290	geckodriver	INFO	Listening on 127.0.0.1:51455
+1737310770358	mozrunner::runner	INFO	Running command: "C:\\Users\\PC Gebruiker\\.cache\\selenium\\firefox\\win64\\134.0.1\\firefox.exe" "--marionette" "--remote-d ... "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\PCGEBR~1\\AppData\\Local\\Temp\\rust_mozprofileprME1s"
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+Dynamically enable window occlusion 0
+1737310770719	Marionette	INFO	Marionette enabled
+1737310770942	Marionette	INFO	Listening on port 51465
+WebDriver BiDi listening on ws://127.0.0.1:51456
+Read port: 51465
+1737310771046	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+DevTools listening on ws://127.0.0.1:51456/devtools/browser/9b0c5063-7945-4213-be73-b5c803a6709c
+JavaScript warning: https://cdn.tailwindcss.com/, line 1: Script terminated by timeout at:
+Bv@https://cdn.tailwindcss.com/:1:666
+pe@https://cdn.tailwindcss.com/:1:709
+py<@https://cdn.tailwindcss.com/:34:10463
+P/<@https://cdn.tailwindcss.com/:1:382
+xy<@https://cdn.tailwindcss.com/:34:14716
+P/<@https://cdn.tailwindcss.com/:1:382
+Ay<@https://cdn.tailwindcss.com/:34:15522
+x/<@https://cdn.tailwindcss.com/:1:414
+_y<@https://cdn.tailwindcss.com/:36:84
+x/<@https://cdn.tailwindcss.com/:1:414
+@https://cdn.tailwindcss.com/:64:1519
+@https://cdn.tailwindcss.com/:64:3639
+
+1737310774438	Marionette	INFO	Stopped listening on port 51465
+Dynamically enable window occlusion 1
