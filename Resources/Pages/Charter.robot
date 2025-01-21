@@ -20,6 +20,10 @@ CharterList.Select a charter from the charter list
     [Arguments]    ${charter}
     CharterList.Select a charter from the charter list   ${charter}
 
+CharterList.Select "nth" charter from the charter list
+    [Arguments]     ${charter}
+    CharterList.Select "nth" charter from the charter list  ${charter}
+
 NewCharterForm.Click on the "Create" button
     NewCharterForm.Click on the "Create" button
 

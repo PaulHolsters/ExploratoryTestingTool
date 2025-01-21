@@ -17,12 +17,13 @@ ${BROWSER} =    edge
 *** Keywords ***
 Login
     [Arguments]    ${BROWSER}
-    open browser   http://127.0.0.1:8000/    ${BROWSER}
+    open browser   https://www.exploratory-testing-tool.com/    ${BROWSER}
     Home.AppHeader.click "Log in"
     Login.LoginForm.Enter email address
     LoginForm.Enter password
     LoginForm.Select "Remember me" checkbox
     LoginForm.Click on "Log in" button
+
 *** Test Cases ***
 # logging in feature
 Login with valid credentials succeeds
@@ -32,7 +33,7 @@ Login with valid credentials succeeds
 Login with invalid email address fails while showing a fail message
     [Setup]
     [Tags]    login
-    open browser   http://127.0.0.1:8000/    ${BROWSER}
+    open browser   https://www.exploratory-testing-tool.com/    ${BROWSER}
     Home.AppHeader.click "Log in"
     Login.LoginForm.Enter email address     ph.29@hotmail.com
     Login.LoginForm.Enter password
@@ -43,7 +44,7 @@ Login with invalid email address fails while showing a fail message
 Login with invalid password fails while showing a fail message
     [Setup]
     [Tags]    login
-    open browser   http://127.0.0.1:8000/    ${BROWSER}
+    open browser   https://www.exploratory-testing-tool.com/    ${BROWSER}
     Home.AppHeader.click "Log in"
     Login.LoginForm.Enter email address
     Login.LoginForm.Enter password          Some incorrect password;
@@ -54,7 +55,7 @@ Login with invalid password fails while showing a fail message
 Login with invalid email address and invalid password fails while showing a fail message
     [Setup]
     [Tags]    login
-    open browser   http://127.0.0.1:8000/    ${BROWSER}
+    open browser   https://www.exploratory-testing-tool.com/    ${BROWSER}
     Home.AppHeader.click "Log in"
     Login.LoginForm.Enter email address     ph.29@hotmail.com
     Login.LoginForm.Enter password          Some incorrect password;
@@ -64,7 +65,7 @@ Login with invalid email address and invalid password fails while showing a fail
 
 Selecting the "Remember me" checkbox when logging in makes sure your pages never expire
     [Tags]    login
-    sleep     30s
+    sleep     10s
     Charter.AppHeader.click app logo
     Home.AppHeader.click "My tests"
 
@@ -77,7 +78,7 @@ Create a test charter
 
 Edit a test charter
     [Tags]      charter
-    Charter.CharterList.Select a charter from the charter list              This is a new charter
+    Charter.CharterList.Select "nth" charter from the charter list          1
     CharterDetail.CharterForm.Change charter text                           Changed Charter
     CharterDetail.CharterForm.Click on the "Edit" button
     reload page
@@ -85,7 +86,7 @@ Edit a test charter
 
 Edit the notes of a test charter
     [Tags]      charter
-    Charter.CharterList.Select a charter from the charter list              This is a new charter
+    Charter.CharterList.Select "nth" charter from the charter list          4
     CharterDetail.CharterForm.Change charter notes text                     Changed Note Charter Text
     CharterDetail.CharterForm.Click on the "Edit" button
     reload page
@@ -93,20 +94,33 @@ Edit the notes of a test charter
 
 Open a bugreport when there is only one bugreport
     [Tags]      charter detail
-    Charter.CharterList.Select a charter from the charter list              just a charter
-    CharterDetail.BugreportList.Open bugreport                              some test bug report
-    Bugreport.BugreportForm.Verify if bug report has title                  some test bug report
+    Charter.CharterList.Select "nth" charter from the charter list          0
+    CharterDetail.BugreportList.Open "nth" bugreport                        0
+    # Bugreport.BugreportForm.Verify if bug report has a title
 
-# test session feature
 Create a test session
     [Tags]      session
-    Charter.CharterList.Select a charter from the charter list              just a charter
+    Charter.CharterList.Select "nth" charter from the charter list          0
     CharterDetail.CharterForm.Click on the "New session" button
     Session.SessionForm.Verify if session has a title
 
 Add findings to a test session when a recording with a few notes and a bugreport is already made
+    [Tags]      session
+    Charter.CharterList.Select "nth" charter from the charter list          0
+    CharterDetail.SessionList.Select "nth" session from the session list    0
+    Session.SessionForm.Add findings to the "Findings" textarea             My fresh findings
+    Session.SessionForm.Click "edit" button
+    reload page
+    Session.SessionForm.Verify if "Findings" textarea contains text         My fresh findings
 
 Change the findings of a test session when a recording with a few notes and a bugreport is already made
+    [Tags]      session
+    Charter.CharterList.Select "nth" charter from the charter list          0
+    CharterDetail.SessionList.Select "nth" session from the session list    0
+    Session.SessionForm.Change "Findings" textarea to                       My fresh findings
+    Session.SessionForm.Click "edit" button
+    reload page
+    Session.SessionForm.Verify if "findings" textarea has text              My fresh findings
 
 Edit the session title
 

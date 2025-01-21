@@ -2,6 +2,7 @@
 Resource    ../PO/AppHeader.robot
 Resource    ../PO/CharterForm.robot
 Resource    ../PO/BugreportList.robot
+Resource    ../PO/SessionList.robot
 
 *** Variables ***
 
@@ -39,3 +40,11 @@ BugreportList.Open bugreport
 
 CharterForm.Click on the "New session" button
     CharterForm.Click on the "New session" button
+
+SessionList.Select "nth" session from the session list
+    [Arguments]         ${session}
+    SessionList.Select "nth" session from the session list  ${session}
+
+BugreportList.Open "nth" bugreport
+    [Arguments]    ${bugreport}
+    BugreportList.Open "nth" bugreport      ${bugreport}
