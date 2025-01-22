@@ -48,3 +48,8 @@ SessionList.Select "nth" session from the session list
 BugreportList.Open "nth" bugreport
     [Arguments]    ${bugreport}
     BugreportList.Open "nth" bugreport      ${bugreport}
+
+SessionList.Get number of sessions in the "Sessions" list
+    ${count} =  SessionList.Get number of sessions in the "Sessions" list
+    RETURN      ${count}
+

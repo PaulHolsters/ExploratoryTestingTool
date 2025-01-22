@@ -6,6 +6,7 @@ Resource    ../Resources/Pages/CharterDetail.robot
 Resource    ../Resources/Pages/Home.robot
 Resource    ../Resources/Pages/Login.robot
 Resource    ../Resources/Pages/Session.robot
+Resource    ../Resources/ExploratoryTestingTool.app.robot
 
 Test Setup          Login     ${BROWSER}
 Test Teardown       close browser
@@ -134,13 +135,20 @@ Edit the session title
     reload page
     Session.SessionForm.Verify if "Title" textfield has text                My new title doo
 
-Edit the name of a recording when only one recording is present
+Edit the name of a recording
     [Tags]      session
-# todo
+    Open a session that has an existing recording in its "Recordings" list
+    Session.RecordingList.Click on the "pencil" icon of the nth recording   0
+    Session.RecordingForm.Change name of recording into                     my_new_name.webm
+    Session.RecordingForm.Click on the "Edit" button
+    Session.RecordingList.Verify the nth recording in the list has name    0    my_new_name.webm
 
-Delete a recording when only one recording is present
+Delete a recording
     [Tags]      session
-# todo
+    Open a session that has an existing recording in its "Recordings" list
+    ${timestamp} =   Session.Recordinglist.Get timestamp of nth recording           0
+    Session.RecordingList.Click on the "trash" icon of the nth recording            0
+    Session.RecordingList.Verify no recording exists with timestamp                 ${timestamp}
 
 Delete a few notes of a test session within a bunch of notes making sure one of the deleted notes is a note taken during recording and one is not
     [Tags]      session

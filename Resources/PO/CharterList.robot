@@ -13,3 +13,7 @@ Select a charter from the charter list
 Select "nth" charter from the charter list
     [Arguments]     ${charter}
     click element       dom:document.querySelectorAll('main ul a')[${charter}]
+
+Get number of charters in the "Charters" list
+    ${elements}=    get element count    css:ul a
+    RETURN    ${elements}
