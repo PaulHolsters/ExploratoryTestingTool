@@ -7,7 +7,7 @@ Enter email address
     input text          email       ${email}
 
 Enter password
-    [Arguments]         ${password}=password
+    [Arguments]         ${password}=password2
     input text          password    ${password}
 
 Select "Remember me" checkbox

@@ -24,3 +24,11 @@ SessionForm.Verify if "Findings" textarea contains text
 SessionForm.Add findings to the "Findings" textarea
     [Arguments]     ${findings}
     SessionForm.Add findings to the "Findings" textarea     ${findings}
+
+SessionForm.Replace text in "Title" textfield with
+    [Arguments]     ${text}
+    SessionForm.Replace text in "Title" textfield with    ${text}
+
+SessionForm.Verify if "Title" textfield has text
+    [Arguments]     ${text}
+    SessionForm.Verify if "Title" textfield has text    ${text}

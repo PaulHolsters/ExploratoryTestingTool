@@ -13,11 +13,14 @@ Test Teardown       close browser
 # robot -d .\Results\ -t "Create a test charter" tests/ExploratoryTestingTool.robot
 *** Variables ***
 ${BROWSER} =    edge
+# https://www.exploratory-testing-tool.com/
+# http://127.0.0.1:8000/
+${BASE_URL} =   http://127.0.0.1:8000/
 
 *** Keywords ***
 Login
     [Arguments]    ${BROWSER}
-    open browser   https://www.exploratory-testing-tool.com/    ${BROWSER}
+    open browser      ${BASE_URL}    ${BROWSER}
     Home.AppHeader.click "Log in"
     Login.LoginForm.Enter email address
     LoginForm.Enter password
@@ -27,13 +30,13 @@ Login
 *** Test Cases ***
 # logging in feature
 Login with valid credentials succeeds
-    [Tags]    login
+    [Tags]    auth
     Charter.Verify if page has loaded
 
 Login with invalid email address fails while showing a fail message
     [Setup]
-    [Tags]    login
-    open browser   https://www.exploratory-testing-tool.com/    ${BROWSER}
+    [Tags]    auth
+    open browser   ${BASE_URL}    ${BROWSER}
     Home.AppHeader.click "Log in"
     Login.LoginForm.Enter email address     ph.29@hotmail.com
     Login.LoginForm.Enter password
@@ -43,8 +46,8 @@ Login with invalid email address fails while showing a fail message
 
 Login with invalid password fails while showing a fail message
     [Setup]
-    [Tags]    login
-    open browser   https://www.exploratory-testing-tool.com/    ${BROWSER}
+    [Tags]    auth
+    open browser   ${BASE_URL}    ${BROWSER}
     Home.AppHeader.click "Log in"
     Login.LoginForm.Enter email address
     Login.LoginForm.Enter password          Some incorrect password;
@@ -54,8 +57,8 @@ Login with invalid password fails while showing a fail message
 
 Login with invalid email address and invalid password fails while showing a fail message
     [Setup]
-    [Tags]    login
-    open browser   https://www.exploratory-testing-tool.com/    ${BROWSER}
+    [Tags]    auth
+    open browser   ${BASE_URL}    ${BROWSER}
     Home.AppHeader.click "Log in"
     Login.LoginForm.Enter email address     ph.29@hotmail.com
     Login.LoginForm.Enter password          Some incorrect password;
@@ -64,8 +67,8 @@ Login with invalid email address and invalid password fails while showing a fail
     Login.LoginForm.Form shows message      The provided credentials are incorrect.
 
 Selecting the "Remember me" checkbox when logging in makes sure your pages never expire
-    [Tags]    login
-    sleep     10s
+    [Tags]    auth
+    sleep     5s
     Charter.AppHeader.click app logo
     Home.AppHeader.click "My tests"
 
@@ -123,46 +126,77 @@ Change the findings of a test session when a recording with a few notes and a bu
     Session.SessionForm.Verify if "findings" textarea has text              My fresh findings
 
 Edit the session title
+    [Tags]      session
+    Charter.CharterList.Select "nth" charter from the charter list          0
+    CharterDetail.SessionList.Select "nth" session from the session list    0
+    Session.SessionForm.Replace text in "Title" textfield with              My new title doo
+    Session.SessionForm.Click "edit" button
+    reload page
+    Session.SessionForm.Verify if "Title" textfield has text                My new title doo
 
 Edit the name of a recording when only one recording is present
-
-Download a recording and open it        # how?
-
-View a recording    # go to the correct tab check for the video element to have the src attribute filled in and play the video (with javascript?)
+    [Tags]      session
+# todo
 
 Delete a recording when only one recording is present
+    [Tags]      session
+# todo
 
 Delete a few notes of a test session within a bunch of notes making sure one of the deleted notes is a note taken during recording and one is not
+    [Tags]      session
+# todo
 
 Create two bugreports
-# todo dees is nog nen interessante om te doen
+    [Tags]      session
+# todo
 
-# bugreport feature
 Change the title of a bugreport
+    [Tags]      bugreport
+# todo
 
-Delete a bugreport from within the bugreport page
+Delete a bugreport
+    [Tags]      bugreport
+# todo
 
 Add a few steps to an existing bugreport when no steps are present
+    [Tags]      bugreport
+# todo
 
 Change the order of steps, including the first and last step
+    [Tags]      bugreport
+# todo
 
 Delete the first and last step and a step in between multiple steps
+    [Tags]      bugreport
+# todo
 
 # back button feature
 Going back from the sessions page to the charters page
+    [Tags]      navigation
+# todo
 
 Going back from the bugreports page to the sessions page
+    [Tags]      navigation
+# todo
 
 Going back from the bugreports page to the charters page
+    [Tags]      navigation
+# todo
 
-# logging out feature
 Logging out from the sessions page
+    [Tags]      auth
+# todo
 
 # logo button feature
-Open the charters page via the "My tests" link
+Open the charters page via the "My tests" link from within the home page
+    [Tags]      navigation
+# todo
 
+Download a recording and open it
+    [Tags]      session
 
-
+View a recording    # go to the correct tab check for the video element to have the src attribute filled in and play the video (with javascript?)
+    [Tags]      session
 
 
 

@@ -4,7 +4,7 @@ Resource    ../PO/AppHeader.robot
 
 *** Keywords ***
 AppHeader.click "Log in"
-    AppHeader.click "Log in"        # dit werkt perfect
+    AppHeader.click "Log in"
 
 AppHeader.click "Log out"
     AppHeader.click "Log out"

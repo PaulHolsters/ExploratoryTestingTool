@@ -3,6 +3,9 @@ Library    SeleniumLibrary
 Library    Collections
 Library    String
 
+*** Variables ***
+${SESSION_TITLE_TEXTFIELD} =    xpath://input[@id="title"]/ancestor::form//h2[text()="Test session"]/following-sibling::*//input[@id="title"]
+
 *** Keywords ***
 Verify if session has a title
     ${value} =    get value    dom:document.getElementsByName('title')[1]
@@ -28,3 +31,11 @@ Click "edit" button
 Change "Findings" textarea to
     [Arguments]     ${findings}
     input text      id:findings    ${findings}
+
+Replace text in "Title" textfield with
+    [Arguments]     ${text}
+    input text      ${SESSION_TITLE_TEXTFIELD}      ${text}
+
+Verify if "Title" textfield has text
+    [Arguments]     ${text}
+    textfield value should be   ${SESSION_TITLE_TEXTFIELD}   ${text}

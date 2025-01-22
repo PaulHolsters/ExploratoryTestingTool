@@ -12,7 +12,7 @@ LoginForm.Enter email address
     LoginForm.Enter email address   ${email}
 
 LoginForm.Enter password
-    [Arguments]         ${password}=password
+    [Arguments]         ${password}=password2
     LoginForm.Enter password     ${password}
 
 LoginForm.Select "Remember me" checkbox
@@ -23,4 +23,4 @@ LoginForm.Form shows message
     LoginForm.Form shows message    ${message}
 
 Page is open
-    location should be    https://www.exploratory-testing-tool.com/login
+    location should be    ${BASE_URL}login

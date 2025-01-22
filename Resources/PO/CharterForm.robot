@@ -4,11 +4,11 @@ Library    SeleniumLibrary
 *** Keywords ***
 Change charter text
     [Arguments]    ${Text}
-    input text      charter     ${Text}     # todo append text is always better! => new keyword!
+    input text      charter     ${Text}
 
 Change charter notes text
     [Arguments]    ${Text}
-    input text      notes     ${Text}     # todo append text is always better! => new keyword!
+    input text      notes     ${Text}
 
 Click on the "Edit" button
     click button    Edit
