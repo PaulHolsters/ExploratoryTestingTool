@@ -13,4 +13,3 @@ Get number of sessions in the "Sessions" list
     ${count} =  get element count   ${SESSION_LIST}//li
     RETURN      ${count}
 
-

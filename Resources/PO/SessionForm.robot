@@ -28,6 +28,9 @@ Add findings to the "Findings" textarea
 Click "edit" button
     click button    Edit
 
+Click "Delete" button
+    click button    Delete
+
 Change "Findings" textarea to
     [Arguments]     ${findings}
     input text      id:findings    ${findings}

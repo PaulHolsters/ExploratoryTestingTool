@@ -6,6 +6,7 @@ Resource    ../Resources/Pages/CharterDetail.robot
 Resource    ../Resources/Pages/Home.robot
 Resource    ../Resources/Pages/Login.robot
 Resource    ../Resources/Pages/Session.robot
+
 Resource    ../Resources/ExploratoryTestingTool.app.robot
 
 Test Setup          Login     ${BROWSER}
@@ -16,8 +17,6 @@ Test Teardown       close browser
 ${BROWSER} =    edge
 # https://www.exploratory-testing-tool.com/
 # http://127.0.0.1:8000/
-${BASE_URL} =   http://127.0.0.1:8000/
-
 *** Keywords ***
 Login
     [Arguments]    ${BROWSER}
@@ -69,7 +68,6 @@ Login with invalid email address and invalid password fails while showing a fail
 
 Selecting the "Remember me" checkbox when logging in makes sure your pages never expire
     [Tags]    auth
-    sleep     5s
     Charter.AppHeader.click app logo
     Home.AppHeader.click "My tests"
 
@@ -154,10 +152,24 @@ Delete a few notes of a test session within a bunch of notes making sure one of 
     [Tags]      session
 # todo het probleem is altijd: zulk een sessie zou moeten klaarstaan vóór aanvang van de test => DB implementatie!
     Open a session that has at least two notes,where one of the notes was taken during a recording and the other one was not
+    Session.NoteList.Delete all notes
+    Session.NoteList.Verify list is empty
 
 Create two bugreports
-    [Tags]      session
-# todo
+    [Tags]      bugreport
+    Open a session
+    Session.SessionButtons.Click "Create bugreport" button
+    Session.BugreportForm.Enter title in "Title" textfield    Title bugreport 3
+    Session.BugreportForm.Enter environment in "Environment" textfield    Environment bugreport 3
+    Session.BugreportForm.Enter users in "Users" textfield    Users bugreport 3
+    Session.BugreportForm.Click the "Create" button
+    Session.SessionButtons.Click "Create bugreport" button
+    Session.BugreportForm.Enter title in "Title" textfield    Title bugreport 4
+    Session.BugreportForm.Enter environment in "Environment" textfield    Environment bugreport 4
+    Session.BugreportForm.Enter users in "Users" textfield    Users bugreport 4
+    Session.BugreportForm.Click the "Create" button
+    Session.BugreportList.Verify the list contains a bugreport with title    Title bugreport 3
+    Session.BugreportList.Verify the list contains a bugreport with title    Title bugreport 4
 
 Change the title of a bugreport
     [Tags]      bugreport

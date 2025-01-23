@@ -4,6 +4,9 @@ Resource    ../PO/SessionForm.robot
 Resource    ../PO/RecordingList.robot
 Resource    ../PO/RecordingForm.robot
 Resource    ../PO/NoteList.robot
+Resource    ../PO/BugreportList.robot
+Resource    ../PO/BugreportForm.robot
+Resource    ../PO/SessionButtons.robot
 
 *** Keywords ***
 SessionForm.Verify if session has a title
@@ -17,8 +20,11 @@ SessionForm.Change "Findings" textarea to
     [Arguments]     ${findings}
     SessionForm.Change "Findings" textarea to    ${findings}
 
-SessionForm.Click "edit" button
-    SessionForm.Click "edit" button
+SessionForm.Click "Edit" button
+    SessionForm.Click "Edit" button
+
+SessionForm.Click "Delete" button
+    SessionForm.Click "Delete" button
 
 SessionForm.Verify if "Findings" textarea contains text
     [Arguments]    ${text}
@@ -78,3 +84,31 @@ NoteList.There is at least one note that was taken outside of a recording
 NoteList.There is at least one note that was taken while recording
     ${exists} =     NoteList.There is at least one note that was taken while recording
     RETURN  ${exists}
+
+NoteList.Delete all notes
+    NoteList.Delete all notes
+
+NoteList.Verify list is empty
+    NoteList.Verify list is empty
+
+BugreportForm.Click the "Create" button
+    BugreportForm.Click the "Create" button
+
+BugreportForm.Enter environment in "Environment" textfield
+    [Arguments]     ${val}
+    BugreportForm.Enter environment in "Environment" textfield      ${val}
+
+BugreportForm.Enter title in "Title" textfield
+    [Arguments]     ${val}
+    BugreportForm.Enter title in "Title" textfield  ${val}
+
+BugreportForm.Enter users in "Users" textfield
+    [Arguments]     ${val}
+    BugreportForm.Enter users in "Users" textfield       ${val}
+
+BugreportList.Verify the list contains a bugreport with title
+    [Arguments]    ${title}
+    BugreportList.Verify the list contains a bugreport with title  ${title}
+
+SessionButtons.Click "Create bugreport" button
+    SessionButtons.Click "Create bugreport" button
