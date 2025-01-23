@@ -152,7 +152,8 @@ Delete a recording
 
 Delete a few notes of a test session within a bunch of notes making sure one of the deleted notes is a note taken during recording and one is not
     [Tags]      session
-# todo
+# todo het probleem is altijd: zulk een sessie zou moeten klaarstaan vóór aanvang van de test => DB implementatie!
+    Open a session that has at least two notes,where one of the notes was taken during a recording and the other one was not
 
 Create two bugreports
     [Tags]      session

@@ -3,6 +3,7 @@ Resource    ../PO/AppHeader.robot
 Resource    ../PO/SessionForm.robot
 Resource    ../PO/RecordingList.robot
 Resource    ../PO/RecordingForm.robot
+Resource    ../PO/NoteList.robot
 
 *** Keywords ***
 SessionForm.Verify if session has a title
@@ -69,3 +70,11 @@ RecordingForm.Click on the "Edit" button
 
 AppHeader.click "Back" button
     AppHeader.click "Back" button
+
+NoteList.There is at least one note that was taken outside of a recording
+    ${exists} =     NoteList.There is at least one note that was taken outside of a recording
+    RETURN  ${exists}
+
+NoteList.There is at least one note that was taken while recording
+    ${exists} =     NoteList.There is at least one note that was taken while recording
+    RETURN  ${exists}

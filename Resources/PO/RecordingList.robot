@@ -25,10 +25,8 @@ Verify no recording exists with timestamp
      ${recs} =      get element count    xpath:(//h3[text()='Recordings']/following-sibling::ul)[1]/li
      FOR    ${index}    IN RANGE     1       ${recs}
         ${ts} =     get text    xpath:((//h3[text()='Recordings']/following-sibling::ul)[1]/li[${index}]//p)[1]
-        ${equal} =  should not be equal as strings    ${ts}     ${timestamp}
-        IF  ${equal}    =     False
-            fail
-        END
+        should not be equal as strings  ${ts}    ${timestamp}
+     END
 
 Verify the nth recording in the list has name
     [Arguments]     ${index}    ${name}
