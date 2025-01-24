@@ -3,6 +3,7 @@ Library    SeleniumLibrary
 Resource    Pages/Charter.robot
 Resource    Pages/CharterDetail.robot
 Resource    Pages/Session.robot
+Resource    Pages/Bugreport.robot
 
 *** Variables ***
 ${BASE_URL} =   http://127.0.0.1:8000
@@ -13,6 +14,57 @@ ${BASE_URL} =   http://127.0.0.1:8000
 Open ${pagename} page
     ${loc} =    get location
     RUN KEYWORD IF   '${loc}' != '${URLS}[${pagename}]'    go to    ${URLS}[${pagename}]
+
+Open a bugreport that has no bug reproduction steps in it
+    Open charter page
+    ${CHARTER_INDEX} =      set variable    0
+    ${CHARTER_COUNT} =      Charter.CharterList.Get number of charters in the "Charters" list
+    ${BUGREPORT_NOT_FOUND} =      set variable    ${true}
+    IF  ${CHARTER_COUNT} == 0   fail    No charters exist to select a bugreport from
+    WHILE   ${BUGREPORT_NOT_FOUND}     limit=${CHARTER_COUNT}    on_limit=pass
+        Charter.CharterList.Select "nth" charter from the charter list    ${CHARTER_INDEX}
+        ${BUGREPORT_INDEX} =      set variable    0
+        ${BUGREPORT_COUNT} =      CharterDetail.BugreportList.Get number of bugreports in the "Bugreports" list
+        IF  ${BUGREPORT_COUNT} > 0
+            WHILE    ${BUGREPORT_NOT_FOUND}     limit=${BUGREPORT_COUNT}    on_limit=pass
+                    CharterDetail.BugreportList.Open "nth" bugreport    ${BUGREPORT_INDEX}
+                    ${NO_STEPS_EXIST} =  Bugreport.ReproStepList.There are no bug reproduction steps present yet
+                    IF      ${NO_STEPS_EXIST}
+                        ${BUGREPORT_NOT_FOUND} =      set variable    ${false}
+                    ELSE
+                        Bugreport.AppHeader.click "Back" button
+                    END
+                    ${BUGREPORT_INDEX} =  evaluate    ${BUGREPORT_INDEX} + 1
+            END
+        END
+        IF    ${BUGREPORT_NOT_FOUND}
+            CharterDetail.AppHeader.click "Back" button
+        END
+        ${CHARTER_INDEX} =  evaluate    ${CHARTER_INDEX} + 1
+    END
+    run keyword if    ${CHARTER_INDEX} == ${CHARTER_COUNT}      fail    There aren't any existing bugreports to choose from
+
+Open a bugreport that has at least ${NUMBER_OF_STEPS} reproduction steps in it
+
+
+
+Open a bugreport
+    Open charter page
+    ${CHARTER_INDEX} =      set variable    0
+    ${CHARTER_COUNT} =      Charter.CharterList.Get number of charters in the "Charters" list
+    ${BUGREPORT_NOT_FOUND} =      set variable    ${true}
+    IF  ${CHARTER_COUNT} == 0   fail    No charters exist to select a bugreport from
+    WHILE   ${BUGREPORT_NOT_FOUND}     limit=${CHARTER_COUNT}    on_limit=pass
+        Charter.CharterList.Select "nth" charter from the charter list    ${CHARTER_INDEX}
+        TRY
+            CharterDetail.BugreportList.Open "nth" bugreport    0
+            ${BUGREPORT_NOT_FOUND} =      set variable    ${false}
+        EXCEPT
+            CharterDetail.AppHeader.click "Back" button
+            ${CHARTER_INDEX} =  evaluate    ${CHARTER_INDEX} + 1
+        END
+    END
+    run keyword if    ${CHARTER_INDEX} == ${CHARTER_COUNT}      fail    There aren't any existing bugreports to choose from
 
 Open a session that has an existing recording in its "Recordings" list
     Open charter page
@@ -85,6 +137,7 @@ open a session
             ${CHARTER_INDEX} =  evaluate    ${CHARTER_INDEX} + 1
         END
     END
+    run keyword if    ${CHARTER_INDEX} == ${CHARTER_COUNT}      fail    There aren't any existing sessions to choose from
 
 #open a session
 #    ${found} =      set variable    ${false}

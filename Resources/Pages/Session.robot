@@ -5,7 +5,7 @@ Resource    ../PO/RecordingList.robot
 Resource    ../PO/RecordingForm.robot
 Resource    ../PO/NoteList.robot
 Resource    ../PO/BugreportList.robot
-Resource    ../PO/BugreportForm.robot
+Resource    ../PO/NewBugreportForm.robot
 Resource    ../PO/SessionButtons.robot
 
 *** Keywords ***
@@ -91,20 +91,20 @@ NoteList.Delete all notes
 NoteList.Verify list is empty
     NoteList.Verify list is empty
 
-BugreportForm.Click the "Create" button
-    BugreportForm.Click the "Create" button
+NewBugreportForm.Click the "Create" button
+    NewBugreportForm.Click the "Create" button
 
-BugreportForm.Enter environment in "Environment" textfield
+NewBugreportForm.Enter environment in "Environment" textfield
     [Arguments]     ${val}
-    BugreportForm.Enter environment in "Environment" textfield      ${val}
+    NewBugreportForm.Enter environment in "Environment" textfield      ${val}
 
-BugreportForm.Enter title in "Title" textfield
+NewBugreportForm.Enter title in "Title" textfield
     [Arguments]     ${val}
-    BugreportForm.Enter title in "Title" textfield  ${val}
+    NewBugreportForm.Enter title in "Title" textfield  ${val}
 
-BugreportForm.Enter users in "Users" textfield
+NewBugreportForm.Enter users in "Users" textfield
     [Arguments]     ${val}
-    BugreportForm.Enter users in "Users" textfield       ${val}
+    NewBugreportForm.Enter users in "Users" textfield       ${val}
 
 BugreportList.Verify the list contains a bugreport with title
     [Arguments]    ${title}

@@ -159,33 +159,81 @@ Create two bugreports
     [Tags]      bugreport
     Open a session
     Session.SessionButtons.Click "Create bugreport" button
-    Session.BugreportForm.Enter title in "Title" textfield    Title bugreport 3
-    Session.BugreportForm.Enter environment in "Environment" textfield    Environment bugreport 3
-    Session.BugreportForm.Enter users in "Users" textfield    Users bugreport 3
-    Session.BugreportForm.Click the "Create" button
+    Session.NewBugreportForm.Enter title in "Title" textfield    Title bugreport 3
+    Session.NewBugreportForm.Enter environment in "Environment" textfield    Environment bugreport 3
+    Session.NewBugreportForm.Enter users in "Users" textfield    Users bugreport 3
+    Session.NewBugreportForm.Click the "Create" button
     Session.SessionButtons.Click "Create bugreport" button
-    Session.BugreportForm.Enter title in "Title" textfield    Title bugreport 4
-    Session.BugreportForm.Enter environment in "Environment" textfield    Environment bugreport 4
-    Session.BugreportForm.Enter users in "Users" textfield    Users bugreport 4
-    Session.BugreportForm.Click the "Create" button
+    Session.NewBugreportForm.Enter title in "Title" textfield    Title bugreport 4
+    Session.NewBugreportForm.Enter environment in "Environment" textfield    Environment bugreport 4
+    Session.NewBugreportForm.Enter users in "Users" textfield    Users bugreport 4
+    Session.NewBugreportForm.Click the "Create" button
     Session.BugreportList.Verify the list contains a bugreport with title    Title bugreport 3
     Session.BugreportList.Verify the list contains a bugreport with title    Title bugreport 4
 
 Change the title of a bugreport
     [Tags]      bugreport
-# todo
+    Open a bugreport
+    Bugreport.BugreportForm.Enter title in "Title" textfield erasing previous content      My new fresh tit
+    Bugreport.BugreportForm.Click the "Edit" button
+    reload page
+    Bugreport.BugreportForm.Verify if bug report has title    My new fresh tit
+
+Open a bugreport
+    [Tags]      actions
+    Open a bugreport
+    sleep    300s
 
 Delete a bugreport
     [Tags]      bugreport
-# todo
+    Open a bugreport
+    ${title} =      Bugreport.BugreportForm.Get bugreport title
+    Bugreport.BugreportForm.Click the "Delete" button
+    CharterDetail.BugreportList.Verify the list does not contain a bugreport with title    ${title}
 
 Add a few steps to an existing bugreport when no steps are present
     [Tags]      bugreport
-# todo
+    Open a bugreport that has no bug reproduction steps in it
+    FOR    ${INDEX}    IN RANGE   1   24
+        Bugreport.Click the "Add step" button
+        Bugreport.NewReproStepForm.Enter step text    My fresh new steppy ${INDEX}
+        Bugreport.NewReproStepForm.Click on the "Create" button
+    END
+    Bugreport.ReproStepList.Verify the list has 21 number of steps
 
-Change the order of steps, including the first and last step
+Change the order of steps
     [Tags]      bugreport
-# todo
+    Open a bugreport that has at least 10 reproduction steps in it
+    @{BEFORE} =     Bugreport.ReproStepList.Get all steps
+    Bugreport.ReproStepList.Click the down arrow of step        1
+    Bugreport.ReproStepList.Verify step 2 equals                ${BEFORE}[0]
+    Bugreport.ReproStepList.Click the up arrow arrow of step    9
+    Bugreport.ReproStepList.Verify step 8 equals                ${BEFORE}[8]
+    Bugreport.ReproStepList.Click the up arrow arrow of step    8
+    Bugreport.ReproStepList.Verify step 7 equals                ${BEFORE}[8]
+    Bugreport.ReproStepList.Click the up arrow arrow of step    7
+    Bugreport.ReproStepList.Verify step 6 equals                ${BEFORE}[8]
+    Bugreport.ReproStepList.Click the down arrow of step        2
+    Bugreport.ReproStepList.Verify step 3 equals                ${BEFORE}[0]
+    Bugreport.ReproStepList.Click the down arrow of step        3
+    Bugreport.ReproStepList.Verify step 4 equals                ${BEFORE}[0]
+    Bugreport.ReproStepList.Verify step 1 equals                ${BEFORE}[1]
+    Bugreport.ReproStepList.Verify step 2 equals                ${BEFORE}[2]
+    Bugreport.ReproStepList.Verify step 3 equals                ${BEFORE}[3]
+    Bugreport.ReproStepList.Verify step 5 equals                ${BEFORE}[4]
+    Bugreport.ReproStepList.Verify step 7 equals                ${BEFORE}[5]
+    Bugreport.ReproStepList.Verify step 8 equals                ${BEFORE}[6]
+    Bugreport.ReproStepList.Verify step 9 equals                ${BEFORE}[7]
+    Bugreport.ReproStepList.Verify step 10 equals               ${BEFORE}[9]
+    ${COUNT} =  get count   ${BEFORE}
+    IF  ${COUNT} > 10
+        @{SLICE} =  get slice from list   10
+        ${COUNT} =  get count    ${SLICE}
+        FOR    ${INDEX}     IN RANGE    ${COUNT}
+            ${STEPNUMBER} =    evaluate    ${INDEX} + 1
+            Bugreport.Verify step ${STEPNUMBER} equals                ${BEFORE}[${INDEX}]
+        END
+    END
 
 Delete the first and last step and a step in between multiple steps
     [Tags]      bugreport

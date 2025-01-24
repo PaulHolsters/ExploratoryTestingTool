@@ -53,3 +53,10 @@ SessionList.Get number of sessions in the "Sessions" list
     ${count} =  SessionList.Get number of sessions in the "Sessions" list
     RETURN      ${count}
 
+BugreportList.Verify the list does not contain a bugreport with title
+    [Arguments]    ${title}
+    BugreportList.Verify the list does not contain a bugreport with title    ${title}
+
+BugreportList.Get number of bugreports in the "Bugreports" list
+    ${count} =  BugreportList.Get number of bugreports in the "Bugreports" list
+    RETURN    ${count}

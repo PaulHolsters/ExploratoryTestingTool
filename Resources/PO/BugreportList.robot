@@ -16,3 +16,12 @@ Verify the list contains a bugreport with title
     [Arguments]    ${title}
     ${TITLE_COUNT} =    get element count    xpath://h3[contains(text(), "Bugreports")]/following-sibling::ul/li//p[text()='${title}']
     should be true    ${TITLE_COUNT} == 1
+
+Verify the list does not contain a bugreport with title
+        [Arguments]    ${title}
+        ${TITLE_COUNT} =    get element count    xpath://h3[contains(text(), "Bugreports")]/following-sibling::ul/li//p[text()='${title}']
+        should be true    ${TITLE_COUNT} == 0
+
+Get number of bugreports in the "Bugreports" list
+    ${count} =  get element count    xpath://h3[contains(text(), "Bugreports")]/following-sibling::ul/li
+    RETURN    ${count}
