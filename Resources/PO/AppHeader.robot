@@ -18,8 +18,8 @@ click "My tests"
 click "Log in"
     click link    ${"Log in"_LINK}
 
-click "Log out"
-    click link    ${"Log out"_LINK}
+Click on "Log out"
+    click button    ${"Log out"_LINK}
 
 click "Back" button
     ${element}=      get "back" button      ${"Back"_BUTTON}

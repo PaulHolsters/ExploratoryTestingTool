@@ -23,4 +23,4 @@ LoginForm.Form shows message
     LoginForm.Form shows message    ${message}
 
 Page is open
-    location should be    ${BASE_URL}login
+    location should be    ${BASE_URL}/login

@@ -60,3 +60,7 @@ BugreportList.Verify the list does not contain a bugreport with title
 BugreportList.Get number of bugreports in the "Bugreports" list
     ${count} =  BugreportList.Get number of bugreports in the "Bugreports" list
     RETURN    ${count}
+
+Verify if page has loaded
+    location should contain    ${BASE_URL}/tests/
+    page should contain button    New session

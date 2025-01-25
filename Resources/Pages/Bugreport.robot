@@ -50,3 +50,27 @@ NewReproStepForm.Click on the "Create" button
 
 ReproStepList.Verify the list has ${count} number of steps
     ReproStepList.Verify the list has ${count} number of steps
+
+ReproStepList.Get number of bug reproduction steps
+    ${count} =    ReproStepList.Get number of bug reproduction steps
+    RETURN    ${count}
+
+ReproStepList.Get all steps
+    ${steps} =      ReproStepList.Get all steps
+    RETURN     ${steps}
+
+ReproStepList.Click the down arrow of step
+    [Arguments]     ${stepnumber}
+    ReproStepList.Click the down arrow of step  ${stepnumber}
+
+ReproStepList.Click the up arrow arrow of step
+    [Arguments]     ${stepnumber}
+    ReproStepList.Click the up arrow arrow of step    ${stepnumber}
+
+ReproStepList.Verify step ${stepnumber} equals
+    [Arguments]     ${text}
+    ReproStepList.Verify step ${stepnumber} equals      ${text}
+
+ReproStepList.Delete step
+    [Arguments]    ${stepnumber}
+    ReproStepList.Delete step    ${stepnumber}

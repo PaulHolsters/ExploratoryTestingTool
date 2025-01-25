@@ -15,11 +15,11 @@ Test Teardown       close browser
 # robot -d .\Results\ -t "Create a test charter" tests/ExploratoryTestingTool.robot
 *** Variables ***
 ${BROWSER} =    edge
-# https://www.exploratory-testing-tool.com/
-# http://127.0.0.1:8000/
+
 *** Keywords ***
 Login
     [Arguments]    ${BROWSER}
+    #set selenium speed    0.2s
     open browser      ${BASE_URL}    ${BROWSER}
     Home.AppHeader.click "Log in"
     Login.LoginForm.Enter email address
@@ -28,7 +28,6 @@ Login
     LoginForm.Click on "Log in" button
 
 *** Test Cases ***
-# logging in feature
 Login with valid credentials succeeds
     [Tags]    auth
     Charter.Verify if page has loaded
@@ -106,7 +105,7 @@ Create a test session
     CharterDetail.CharterForm.Click on the "New session" button
     Session.SessionForm.Verify if session has a title
 
-Add findings to a test session when a recording with a few notes and a bugreport is already made
+Add findings to a test session
     [Tags]      session
     Charter.CharterList.Select "nth" charter from the charter list          0
     CharterDetail.SessionList.Select "nth" session from the session list    0
@@ -115,7 +114,7 @@ Add findings to a test session when a recording with a few notes and a bugreport
     reload page
     Session.SessionForm.Verify if "Findings" textarea contains text         My fresh findings
 
-Change the findings of a test session when a recording with a few notes and a bugreport is already made
+Change the findings of a test session
     [Tags]      session
     Charter.CharterList.Select "nth" charter from the charter list          0
     CharterDetail.SessionList.Select "nth" session from the session list    0
@@ -151,6 +150,7 @@ Delete a recording
 Delete a few notes of a test session within a bunch of notes making sure one of the deleted notes is a note taken during recording and one is not
     [Tags]      session
 # todo het probleem is altijd: zulk een sessie zou moeten klaarstaan vóór aanvang van de test => DB implementatie!
+#       niet per se ook dat kost tijd, deze sessie aanmaken via de UI is niet per se verkeerd
     Open a session that has at least two notes,where one of the notes was taken during a recording and the other one was not
     Session.NoteList.Delete all notes
     Session.NoteList.Verify list is empty
@@ -201,7 +201,12 @@ Add a few steps to an existing bugreport when no steps are present
     END
     Bugreport.ReproStepList.Verify the list has 21 number of steps
 
-Change the order of steps
+Open a bugreport with at least two bug reproduction steps in it
+    [Tags]      action
+    Open a bugreport that has at least 2 reproduction steps in it
+    sleep   200s
+
+Change the order of bug reproduction steps
     [Tags]      bugreport
     Open a bugreport that has at least 10 reproduction steps in it
     @{BEFORE} =     Bugreport.ReproStepList.Get all steps
@@ -225,36 +230,60 @@ Change the order of steps
     Bugreport.ReproStepList.Verify step 8 equals                ${BEFORE}[6]
     Bugreport.ReproStepList.Verify step 9 equals                ${BEFORE}[7]
     Bugreport.ReproStepList.Verify step 10 equals               ${BEFORE}[9]
-    ${COUNT} =  get count   ${BEFORE}
+    ${COUNT} =  get length    ${BEFORE}
     IF  ${COUNT} > 10
-        @{SLICE} =  get slice from list   10
-        ${COUNT} =  get count    ${SLICE}
-        FOR    ${INDEX}     IN RANGE    ${COUNT}
+        @{SLICE} =  get slice from list     ${BEFORE}  10
+        ${COUNT} =  get length    ${SLICE}
+        FOR    ${INDEX}     IN RANGE  10  ${COUNT}
             ${STEPNUMBER} =    evaluate    ${INDEX} + 1
-            Bugreport.Verify step ${STEPNUMBER} equals                ${BEFORE}[${INDEX}]
+            Bugreport.ReproStepList.Verify step ${STEPNUMBER} equals     ${BEFORE}[${INDEX}]
         END
     END
 
 Delete the first and last step and a step in between multiple steps
     [Tags]      bugreport
-# todo
+    Open a bugreport that has at least 6 reproduction steps in it
+    @{BEFORE} =     Bugreport.ReproStepList.Get all steps
+    ${COUNT} =  get length    ${BEFORE}
+    Bugreport.ReproStepList.Delete step  4
+    Bugreport.ReproStepList.Delete step  1
+    ${COUNT} =    evaluate   ${COUNT} - 2
+    Bugreport.ReproStepList.Delete step  ${COUNT}
+    @{AFTER} =      Bugreport.ReproStepList.Get all steps
+    remove from list    ${BEFORE}   3
+    remove from list    ${BEFORE}   0
+    remove from list    ${BEFORE}   -1
+    lists should be equal  ${BEFORE}  ${AFTER}
 
-# back button feature
 Going back from the sessions page to the charters page
     [Tags]      navigation
-# todo
+    open a session
+    Session.AppHeader.click "Back" button
+    CharterDetail.Verify if page has loaded
+    CharterDetail.AppHeader.click "Back" button
+    Charter.Verify if page has loaded
 
 Going back from the bugreports page to the sessions page
     [Tags]      navigation
-# todo
+    open a session that has at least one bugreport
+    Session.BugReportList.Open "nth" bugreport      0
+    Bugreport.AppHeader.click "Back" button
+    Session.Verify if page has loaded
 
 Going back from the bugreports page to the charters page
     [Tags]      navigation
-# todo
+    open a bugreport
+    Bugreport.AppHeader.click "Back" button
+    CharterDetail.Verify if page has loaded
+    CharterDetail.AppHeader.click "Back" button
+    Charter.Verify if page has loaded
 
 Logging out from the sessions page
     [Tags]      auth
-# todo
+    open a session
+    Session.AppHeader.Click on "Log out"
+    Home.Verify if page has loaded
+
 
 # logo button feature
 Open the charters page via the "My tests" link from within the home page
@@ -267,7 +296,8 @@ Download a recording and open it
 View a recording    # go to the correct tab check for the video element to have the src attribute filled in and play the video (with javascript?)
     [Tags]      session
 
-
+Create a recording
+    [Tags]      session
 
 
 

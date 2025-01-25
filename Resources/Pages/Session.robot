@@ -77,6 +77,9 @@ RecordingForm.Click on the "Edit" button
 AppHeader.click "Back" button
     AppHeader.click "Back" button
 
+AppHeader.Click on "Log out"
+    AppHeader.Click on "Log out"
+
 NoteList.There is at least one note that was taken outside of a recording
     ${exists} =     NoteList.There is at least one note that was taken outside of a recording
     RETURN  ${exists}
@@ -112,3 +115,22 @@ BugreportList.Verify the list contains a bugreport with title
 
 SessionButtons.Click "Create bugreport" button
     SessionButtons.Click "Create bugreport" button
+
+BugreportList.Verify the list contains at least one bugreport
+    BugreportList.Verify the list contains at least one bugreport
+
+BugreportList.Get number of bugreports in the "Bugreports" list
+    ${COUNT} =    BugreportList.Get number of bugreports in the "Bugreports" list
+    RETURN    ${COUNT}
+
+BugreportList.Open bugreport
+    [Arguments]    ${title}
+    BugreportList.Open bugreport    ${title}
+
+BugreportList.Open "nth" bugreport
+    [Arguments]    ${bugreport}
+    BugreportList.Open "nth" bugreport      ${bugreport}
+
+Verify if page has loaded
+    location should contain    ${BASE_URL}/sessions/
+    page should contain button    Create recording

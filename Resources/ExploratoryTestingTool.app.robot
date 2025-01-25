@@ -44,9 +44,34 @@ Open a bugreport that has no bug reproduction steps in it
     END
     run keyword if    ${CHARTER_INDEX} == ${CHARTER_COUNT}      fail    There aren't any existing bugreports to choose from
 
-Open a bugreport that has at least ${NUMBER_OF_STEPS} reproduction steps in it
-
-
+Open a bugreport that has at least ${REQUIRED_NUMBER_OF_STEPS} reproduction steps in it
+    Open charter page
+    ${CHARTER_INDEX} =      set variable    0
+    ${CHARTER_COUNT} =      Charter.CharterList.Get number of charters in the "Charters" list
+    ${BUGREPORT_NOT_FOUND} =      set variable    ${true}
+    IF  ${CHARTER_COUNT} == 0   fail    No charters exist to select a bugreport from
+    WHILE   ${BUGREPORT_NOT_FOUND}     limit=${CHARTER_COUNT}    on_limit=pass
+        Charter.CharterList.Select "nth" charter from the charter list    ${CHARTER_INDEX}
+        ${BUGREPORT_INDEX} =      set variable    0
+        ${BUGREPORT_COUNT} =      CharterDetail.BugreportList.Get number of bugreports in the "Bugreports" list
+        IF  ${BUGREPORT_COUNT} > 0
+            WHILE    ${BUGREPORT_NOT_FOUND}     limit=${BUGREPORT_COUNT}    on_limit=pass
+                CharterDetail.BugreportList.Open "nth" bugreport    ${BUGREPORT_INDEX}
+                ${NUMBER_OF_STEPS_FOUND} =  Bugreport.ReproStepList.Get number of bug reproduction steps
+                IF      ${NUMBER_OF_STEPS_FOUND} >= ${REQUIRED_NUMBER_OF_STEPS}
+                    ${BUGREPORT_NOT_FOUND} =      set variable    ${false}
+                ELSE
+                    Bugreport.AppHeader.click "Back" button
+                END
+                ${BUGREPORT_INDEX} =  evaluate    ${BUGREPORT_INDEX} + 1
+            END
+        END
+        IF    ${BUGREPORT_NOT_FOUND}
+            CharterDetail.AppHeader.click "Back" button
+        END
+        ${CHARTER_INDEX} =  evaluate    ${CHARTER_INDEX} + 1
+    END
+    run keyword if    ${CHARTER_INDEX} == ${CHARTER_COUNT}      fail    There aren't any existing bugreports to choose from
 
 Open a bugreport
     Open charter page
@@ -120,6 +145,27 @@ Delete all sessions of nth charter
             Session.SessionForm.Click "Delete" button
         END
     END
+
+open a session that has at least one bugreport
+    Open charter page
+    ${found} =      set variable    ${false}
+    ${number_of_charters} =     Charter.CharterList.Get number of charters in the "Charters" list
+    FOR    ${index}     IN RANGE  ${number_of_charters}
+        Charter.CharterList.Select "nth" charter from the charter list    ${index}
+        ${number_of_sessions} =     CharterDetail.SessionList.Get number of sessions in the "Sessions" list
+        FOR    ${index2}    IN RANGE  ${number_of_sessions}
+            CharterDetail.SessionList.Select "nth" session from the session list    ${index2}
+            ${COUNT} =  Session.BugreportList.Get number of bugreports in the "Bugreports" list
+            IF    ${COUNT} > 0
+                ${found} =    set variable    ${true}
+                exit for loop
+            END
+            Session.AppHeader.click "Back" button
+        END
+        exit for loop if    ${found}
+        CharterDetail.AppHeader.click "Back" button
+    END
+    run keyword if   ${found} == ${false}     fail     No session with an existing bugreport was found
 
 open a session
     Open charter page
