@@ -1,5 +1,7 @@
 *** Settings ***
 Library     SeleniumLibrary
+Library     OperatingSystem
+Library     Process
 Resource    ../Resources/Pages/Bugreport.robot
 Resource    ../Resources/Pages/Charter.robot
 Resource    ../Resources/Pages/CharterDetail.robot
@@ -284,14 +286,28 @@ Logging out from the sessions page
     Session.AppHeader.Click on "Log out"
     Home.Verify if page has loaded
 
-
-# logo button feature
 Open the charters page via the "My tests" link from within the home page
     [Tags]      navigation
-# todo
+    Charter.AppHeader.click app logo
+    Home.AppHeader.click "My tests"
+    Charter.Verify if page has loaded
 
 Download a recording and open it
     [Tags]      session
+    open a session that has an existing recording in its "recordings" list
+    ${filename} =   Session.RecordingList.Get recording name of nth recording   0
+    ${filename} =     strip string    ${filename}
+    Session.RecordingList.Click on the "Download" button of the nth recording    0
+    ${fn} =     catenate    D:\\Users\\PC Gebruiker\\Downloads\\${filename}
+    Wait Until Keyword Succeeds    1min    10sec    File Should Exist    ${fn}
+    ${PS_FILE} =    set variable     ${EXECDIR}${/}Scripts${/}RunBatchAsAdmin.ps1
+    ${LOG_FILE} =   set variable   D:\playback_status.log
+    log to console    ${fn}
+    ${result}=  Run Process    powershell.exe    -Command    Start-Process powershell.exe -ArgumentList '-ExecutionPolicy Bypass -File "${PS_FILE}" -downloadedFilePath "${fn}"' -Verb RunAs -Wait
+    ${status}=  Wait Until Keyword Succeeds  1 min  2 sec  Get File  ${LOG_FILE}
+    remove file    ${LOG_FILE}
+    log to console      ${status}
+    should contain    ${status}  Playback successful
 
 View a recording    # go to the correct tab check for the video element to have the src attribute filled in and play the video (with javascript?)
     [Tags]      session

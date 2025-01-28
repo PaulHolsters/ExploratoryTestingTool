@@ -184,17 +184,3 @@ open a session
         END
     END
     run keyword if    ${CHARTER_INDEX} == ${CHARTER_COUNT}      fail    There aren't any existing sessions to choose from
-
-#open a session
-#    ${found} =      set variable    ${false}
-#    ${number_of_charters} =     Charter.CharterList.Get number of charters in the "Charters" list
-#    FOR    ${index}     IN RANGE  ${number_of_charters}
-#        Charter.CharterList.Select "nth" charter from the charter list    ${index}
-#        ${number_of_sessions} =     CharterDetail.SessionList.Get number of sessions in the "Sessions" list
-#        IF    ${number_of_sessions} > 0
-#            CharterDetail.SessionList.Select "nth" session from the session list    0
-#            ${found} =  set variable    ${true}
-#            exit for loop
-#        END
-#    END
-#    run keyword if   ${found} == ${false}     fail     No session found

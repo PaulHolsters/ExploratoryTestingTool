@@ -50,6 +50,16 @@ RecordingList.Click on the "pencil" icon of the nth recording
     [Arguments]     ${index}
     RecordingList.Click on the "pencil" icon of the nth recording    ${index}
 
+RecordingList.Get recording name of nth recording
+    [Arguments]     ${index}
+    ${name} =    RecordingList.Get recording name of nth recording    ${index}
+    RETURN    ${name}
+
+RecordingList.Click on the "Download" button of the nth recording
+    [Arguments]     ${index}
+    RecordingList.Click on the "Download" button of the nth recording    ${index}
+
+
 RecordingList.Click on the "trash" icon of the nth recording
     [Arguments]     ${index}
     RecordingList.Click on the "trash" icon of the nth recording     ${index}

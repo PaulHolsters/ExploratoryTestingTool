@@ -15,10 +15,22 @@ Click on the "pencil" icon of the nth recording
     ${index} =      evaluate    ${index} + 1
     click element    xpath:(//span[text()='Edit recording'])[${index}]/parent::button
 
+Click on the "Download" button of the nth recording
+    [Arguments]     ${index}
+    ${index} =      evaluate    ${index} + 1
+    click element    xpath:(//button[contains(text(),'Download')])[${index}]
+
+Get recording name of nth recording
+    [Arguments]     ${index}
+    ${index} =      evaluate    ${index} + 1
+    ${name} =       get text     xpath:((//h3[text()='Recordings']/following-sibling::ul)[1]/li[${index}]//p)[2]
+    RETURN          ${name}
+
 Click on the "trash" icon of the nth recording
     [Arguments]     ${index}
     ${index} =      evaluate    ${index} + 1
     click element    xpath:(//span[text()='Delete recording'])[${index}]/parent::button
+
 
 Verify no recording exists with timestamp
      [Arguments]     ${timestamp}
