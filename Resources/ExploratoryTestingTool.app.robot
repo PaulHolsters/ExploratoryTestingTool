@@ -1,19 +1,43 @@
 *** Settings ***
 Library    SeleniumLibrary
+Library     Process
+Library     OperatingSystem
+
 Resource    Pages/Charter.robot
 Resource    Pages/CharterDetail.robot
 Resource    Pages/Session.robot
 Resource    Pages/Bugreport.robot
 
+
 *** Variables ***
 ${BASE_URL} =   http://127.0.0.1:8000
 &{URLS}     home=${BASE_URL}    charter=${BASE_URL}/tests   login=${BASE_URL}/login
+
 # https://www.exploratory-testing-tool.com/
 # http://127.0.0.1:8000/
 *** Keywords ***
 Open ${pagename} page
     ${loc} =    get location
     RUN KEYWORD IF   '${loc}' != '${URLS}[${pagename}]'    go to    ${URLS}[${pagename}]
+
+Download a recording and open it
+    [Arguments]    ${CORRUPTED_FILE}=${empty}
+    open a session that has an existing recording in its "recordings" list
+    ${filename} =   Session.RecordingList.Get recording name of nth recording   0
+    ${filename} =     strip string    ${filename}
+    Session.RecordingList.Click on the "Download" button of the nth recording    0
+    ${fn} =     catenate    D:\\Users\\PC Gebruiker\\Downloads\\${filename}
+    log to console    corrupted fuile ${CORRUPTED_FILE}
+    IF    '${CORRUPTED_FILE}' != '${EMPTY}'
+        ${fn} =    set variable    D:\\Users\\PC Gebruiker\\Downloads\\${CORRUPTED_FILE}
+    END
+    Wait Until Keyword Succeeds    1min    10sec    File Should Exist    ${fn}
+    ${PS_FILE} =    set variable     ${EXECDIR}${/}Scripts${/}RunBatchAsAdmin.ps1
+    ${LOG_FILE} =   set variable   D:\playback_status.log
+    ${result}=  Run Process    powershell.exe    -Command    Start-Process powershell.exe -ArgumentList '-ExecutionPolicy Bypass -File "${PS_FILE}" -downloadedFilePath "${fn}"' -Verb RunAs -Wait
+    ${status}=  Wait Until Keyword Succeeds  1 min  2 sec  Get File  ${LOG_FILE}
+    remove file    ${LOG_FILE}
+    RETURN      ${status}
 
 Open a bugreport that has no bug reproduction steps in it
     Open charter page

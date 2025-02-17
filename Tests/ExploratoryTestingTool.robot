@@ -1,7 +1,7 @@
 *** Settings ***
 Library     SeleniumLibrary
-Library     OperatingSystem
-Library     Process
+Library     ../Libraries/Common.py
+
 Resource    ../Resources/Pages/Bugreport.robot
 Resource    ../Resources/Pages/Charter.robot
 Resource    ../Resources/Pages/CharterDetail.robot
@@ -17,6 +17,7 @@ Test Teardown       close browser
 # robot -d .\Results\ -t "Create a test charter" tests/ExploratoryTestingTool.robot
 *** Variables ***
 ${BROWSER} =    edge
+
 
 *** Keywords ***
 Login
@@ -293,30 +294,88 @@ Open the charters page via the "My tests" link from within the home page
     Charter.Verify if page has loaded
 
 Download a recording and open it
-    [Tags]      session
-    open a session that has an existing recording in its "recordings" list
-    ${filename} =   Session.RecordingList.Get recording name of nth recording   0
-    ${filename} =     strip string    ${filename}
-    Session.RecordingList.Click on the "Download" button of the nth recording    0
-    ${fn} =     catenate    D:\\Users\\PC Gebruiker\\Downloads\\${filename}
-    Wait Until Keyword Succeeds    1min    10sec    File Should Exist    ${fn}
-    ${PS_FILE} =    set variable     ${EXECDIR}${/}Scripts${/}RunBatchAsAdmin.ps1
-    ${LOG_FILE} =   set variable   D:\playback_status.log
-    log to console    ${fn}
-    ${result}=  Run Process    powershell.exe    -Command    Start-Process powershell.exe -ArgumentList '-ExecutionPolicy Bypass -File "${PS_FILE}" -downloadedFilePath "${fn}"' -Verb RunAs -Wait
-    ${status}=  Wait Until Keyword Succeeds  1 min  2 sec  Get File  ${LOG_FILE}
-    remove file    ${LOG_FILE}
-    log to console      ${status}
+    ${status} =  ExploratoryTestingTool.app.Download a recording and open it
     should contain    ${status}  Playback successful
 
-View a recording    # go to the correct tab check for the video element to have the src attribute filled in and play the video (with javascript?)
+Debug test of test "Download a recording and open it"
+    [Documentation]     This test makes sure that the "Download a recording and open it" works as intended
+...                     by doing the test with a download file that is corrupted - in which case the "Download
+...                     a recording and open it" test should fail - as well as doing the test with a file that
+...                     is valid - in which case the test should pass. The current test uses a csv file with more than
+...                     hundred rows. The current test passes only when every run of "Download a recording and open it"
+...                     has the expected result (PASS/FAIL).
+     ${ROWS} =          read csv file   C:${/}Users${/}PC Gebruiker${/}PycharmProjects${/}TestAutomation${/}Robotframework${/}ExploratoryTestingTool${/}Data${/}data_download_test.csv
+     ${L} =             get length    ${ROWS}
+     FOR    ${INDEX}  IN RANGE   ${L}
+        ${TEST} =   set variable    ${ROWS}[${INDEX}][0]
+        ${TEST} =   convert to string    ${TEST}
+        IF    '${TEST}' == 'BAD'
+            ${status} =    ExploratoryTestingTool.app.Download a recording and open it   session_1_1.webm
+            should not contain     ${status}  Playback successful
+        ELSE
+            ${status} =    ExploratoryTestingTool.app.Download a recording and open it
+            should contain    ${status}  Playback successful
+        END
+     END
+
+View a recording
     [Tags]      session
+    open a session that has an existing recording in its "recordings" list
+    Session.RecordingList.Click on the "View" button of the nth recording    0
+    ${handles} =    get window handles
+    Switch Window    ${handles}[1]
+    ${duration}=    Execute Async JavaScript
+...    var callback = arguments[arguments.length - 1];
+...    function answer(){
+...             var video = document.getElementById('video');
+...             var duration = new Promise((resolve,reject)=>{
+...                 video.currentTime = Number.MAX_SAFE_INTEGER;
+...                 video.addEventListener('seeked', async function seekHandler() {
+...                     video.currentTime = 0; video.removeEventListener('seeked', seekHandler); resolve(video.duration); });
+...             });
+...        callback(duration);};
+...    window.setTimeout(answer, 2000);
+    ${duration} =       convert to number    ${duration}
+    should be true    ${duration} > 10
+
+
+
+
+    # ${duration} =   get element attribute    video    duration
+    # log to console    ${duration}
+    # ${duration} =   convert to number   ${duration}
+    # should be true    ${duration} > 10
+    # element attribute value should be    video    duration    51.87
+
 
 Create a recording
     [Tags]      session
+    # open an existing exploratory testing session
+    open a session
+    @{recordings_before} =     Session.RecordingList.Get list of recordings
+    ${number_of_recordings_before} =   get length    ${recordings_before}
+    ${number_of_recordings_after} =     evaluate    ${number_of_recordings_before} + 1
 
+    # the following actions create a screen recording of 7 seconds
+    Session.SessionButtons.Click "Create recording" button
+    click element using image recognition       ${CURDIR}${/}..${/}Libraries${/}volledig_scherm.PNG
+    click element using image recognition       ${CURDIR}${/}..${/}Libraries${/}scherm_1.PNG
+    click element using image recognition       ${CURDIR}${/}..${/}Libraries${/}Delen.PNG
+    sleep   7s
+    click element using image recognition       ${CURDIR}${/}..${/}Libraries${/}Delen_stoppen.PNG
 
-
+    # verify that the screen recording was created/works as expected
+    Session.RecordingList.Wait for recording to be created      ${number_of_recordings_after}
+    @{recordings_after} =     Session.RecordingList.Get list of recordings
+    remove values from list    ${recordings_after}    @{recordings_before}
+    ${LENGTH} =     get length    ${recordings_after}
+    should be equal as integers    1    ${LENGTH}
+    @{VALUES} =     create list    View    Download    Clip recording    Edit recording    Delete recording
+    list should contain sub list    ${recordings_after}[0]      ${VALUES}
+    ${is_timestamp} =   string is a timestamp    ${recordings_after}[0][0]
+    should be true   ${is_timestamp}
+    should contain   ${recordings_after}[0][1]       .webm
+    Session.RecordingList.Verify download of recording with timestamp   ${recordings_after}[0][0]
 
 
 

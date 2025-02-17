@@ -1,8 +1,13 @@
 *** Settings ***
 Library    SeleniumLibrary
+Library    ../../Libraries/Common.py
+Library     String
+Library     Process
+Library     OperatingSystem
+
 
 *** Variables ***
-${RECORDINGS_LIST} =    xpath:(//h3[text()='Recordings']/following-sibling::ul)[1]
+${RECORDINGS_LIST} =    (//h3[text()='Recordings']/following-sibling::ul)[1]
 
 *** Keywords ***
 There is at least one recording in the list
@@ -19,6 +24,45 @@ Click on the "Download" button of the nth recording
     [Arguments]     ${index}
     ${index} =      evaluate    ${index} + 1
     click element    xpath:(//button[contains(text(),'Download')])[${index}]
+
+Click on the "View" button of the nth recording
+    [Arguments]     ${index}
+    ${index} =      evaluate    ${index} + 1
+    click element    xpath:(//button[contains(text(),'View')])[${index}]
+
+Click on the "Download" button of recording with timestamp
+    [Arguments]     ${timestamp}
+    click element    xpath:${RECORDINGS_LIST}/li//p[1][contains(text(),'${timestamp}')]/ancestor::li//button[contains(text(),'Download')]
+
+Get recording name of recording with timestamp
+        [Arguments]     ${timestamp}
+        ${name} =       get text    xpath:(${RECORDINGS_LIST}/li//p[1][contains(text(),'${timestamp}')]/ancestor::li//p)[2]
+        RETURN  ${name}
+
+Verify download of recording with timestamp
+    [Arguments]     ${timestamp}
+    Click on the "Download" button of recording with timestamp    ${timestamp}
+    ${filename} =   Get recording name of recording with timestamp    ${timestamp}
+    ${filename} =   strip string    ${filename}
+    ${fn} =     catenate    D:\\Users\\PC Gebruiker\\Downloads\\${filename}
+    Wait Until Keyword Succeeds    1min    10sec    File Should Exist    ${fn}
+    ${PS_FILE} =    set variable     ${EXECDIR}${/}Scripts${/}RunBatchAsAdmin.ps1
+    ${LOG_FILE} =   set variable   D:\playback_status.log
+    ${result}=  Run Process    powershell.exe    -Command    Start-Process powershell.exe -ArgumentList '-ExecutionPolicy Bypass -File "${PS_FILE}" -downloadedFilePath "${fn}"' -Verb RunAs -Wait
+    ${status}=  Wait Until Keyword Succeeds  1 min  2 sec  Get File  ${LOG_FILE}
+    remove file    ${LOG_FILE}
+    should contain    ${status}    Playback successful
+
+
+Wait for recording to be created
+    [Arguments]     ${last_index}
+    wait until element is visible    xpath:${RECORDINGS_LIST}/li[${last_index}]
+
+Get list of recordings
+        @{RECORDINGS} =     get webelements    xpath:${RECORDINGS_LIST}/li
+        @{TEXT_OF_RECORDINGS} =     get text nodes      ${RECORDINGS}
+        ${TEXT_OF_RECORDINGS} =     get str parts    ${TEXT_OF_RECORDINGS}
+        RETURN      ${TEXT_OF_RECORDINGS}
 
 Get recording name of nth recording
     [Arguments]     ${index}

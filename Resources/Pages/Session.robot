@@ -59,6 +59,10 @@ RecordingList.Click on the "Download" button of the nth recording
     [Arguments]     ${index}
     RecordingList.Click on the "Download" button of the nth recording    ${index}
 
+RecordingList.Click on the "View" button of the nth recording
+    [Arguments]     ${index}
+    RecordingList.Click on the "View" button of the nth recording    ${index}
+
 
 RecordingList.Click on the "trash" icon of the nth recording
     [Arguments]     ${index}
@@ -126,8 +130,23 @@ BugreportList.Verify the list contains a bugreport with title
 SessionButtons.Click "Create bugreport" button
     SessionButtons.Click "Create bugreport" button
 
+SessionButtons.Click "Create recording" button
+    SessionButtons.Click "Create recording" button
+
 BugreportList.Verify the list contains at least one bugreport
     BugreportList.Verify the list contains at least one bugreport
+
+RecordingList.Get list of recordings
+    @{list} =   RecordingList.Get list of recordings
+    RETURN      ${list}
+
+RecordingList.Verify download of recording with timestamp
+    [Arguments]     ${timestamp}
+    RecordingList.Verify download of recording with timestamp   ${timestamp}
+
+RecordingList.Wait for recording to be created
+    [Arguments]     ${last_index}
+    RecordingList.Wait for recording to be created  ${last_index}
 
 BugreportList.Get number of bugreports in the "Bugreports" list
     ${COUNT} =    BugreportList.Get number of bugreports in the "Bugreports" list
